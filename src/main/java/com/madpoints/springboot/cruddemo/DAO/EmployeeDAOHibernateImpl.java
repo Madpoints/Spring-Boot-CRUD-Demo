@@ -4,8 +4,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.madpoints.springboot.cruddemo.entity.Employee;
 
@@ -20,9 +23,17 @@ public class EmployeeDAOHibernateImpl implements EmployeeDAO {
 	}
 
 	@Override
+	@Transactional
 	public List<Employee> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Session currentSession = entityManager.unwrap(Session.class);
+		
+		Query<Employee> theQuery =
+				currentSession.createQuery("from Employee", Employee.class);
+		
+		List<Employee> employees = theQuery.getResultList();
+		
+		return employees;
 	}
 	
 }
